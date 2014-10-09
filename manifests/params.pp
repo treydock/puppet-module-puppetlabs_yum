@@ -1,22 +1,30 @@
-# Optional parameters in setting up Puppet Labs Yum repository
-class puppetlabs_yum::params {
-  # Setting to 'absent' will fall back to the yum.conf
-  # Setting proxy here will be the default for all repos.
-  #
-  #  If you wish to set a proxy for an individual set of repos,
-  #   you can declare $proxy in that class, and should scope to
-  #   the most specific declaration of proxy.
-  $proxy = 'absent'
-
+# Private class
+class puppetlabs_yum::params (
+  $urlbase = 'http://yum.puppetlabs.com',
+) {
 
   # There are some URL manipulations that have to happen based on exact OS type
   if $::osfamily == 'RedHat' {
     if $::operatingsystem == 'Fedora' {
       $ostype = 'Fedora'
-      $urlbit = 'fedora/f$releasever'
+      $urlbit = "fedora/f${::operatingsystemmajrelease}"
     } else {
       $ostype = 'EL'
-      $urlbit = 'el/$releasever'
+      $urlbit = "el/${::operatingsystemmajrelease}"
     }
   }
+
+  $products_baseurl         = "${urlbase}/${urlbit}/products/\$basearch"
+  $deps_baseurl             = "${urlbase}/${urlbit}/dependencies/\$basearch"
+  $devel_baseurl            = "${urlbase}/${urlbit}/devel/\$basearch"
+  $products_source_baseurl  = "${urlbase}/${urlbit}/products/SRPMS"
+  $deps_source_baseurl      = "${urlbase}/${urlbit}/dependencies/SRPMS"
+  $devel_source_baseurl     = "${urlbase}/${urlbit}/devel/SRPMS"
+  $products_descr           = "Puppet Labs Products ${ostype} ${::operatingsystemmajrelease} - \$basearch"
+  $deps_descr               = "Puppet Labs Dependencies ${ostype} ${::operatingsystemmajrelease} - \$basearch"
+  $devel_descr              = "Puppet Labs Devel ${ostype} ${::operatingsystemmajrelease} - \$basearch"
+  $products_source_descr    = "Puppet Labs Products ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
+  $deps_source_descr        = "Puppet Labs Dependencies ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
+  $devel_source_descr       = "Puppet Labs Devel ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
+
 }
