@@ -35,6 +35,22 @@ describe 'puppetlabs_yum' do
     it_behaves_like 'puppetlabs_yum::products-el6'
     it_behaves_like 'puppetlabs_yum::deps-el6'
     it_behaves_like 'puppetlabs_yum::devel-el6'
+
+    context 'when operatingsystemmajrelease is undef' do
+      let :facts do
+        {
+          :osfamily               => 'RedHat',
+          :operatingsystem        => 'CentOS',
+          :operatingsystemrelease => '6.5',
+        }
+      end
+
+      it_behaves_like :puppetlabs_yum_supported
+      it_behaves_like 'puppetlabs_yum::gpg_key'
+      it_behaves_like 'puppetlabs_yum::products-el6'
+      it_behaves_like 'puppetlabs_yum::deps-el6'
+      it_behaves_like 'puppetlabs_yum::devel-el6'
+    end
   end
 
   context 'operatingsystem => Fedora' do
@@ -53,13 +69,13 @@ describe 'puppetlabs_yum' do
     it_behaves_like 'puppetlabs_yum::devel-f20'
   end
 
-  context 'pper_installed => true' do
+  context 'is_pe => true' do
     let :facts do
       {
         :osfamily                   => 'RedHat',
         :operatingsystem            => 'CentOS',
         :operatingsystemmajrelease  => '6',
-        :pper_installed             => 'true'
+        :is_pe                      => 'true'
       }
     end
 

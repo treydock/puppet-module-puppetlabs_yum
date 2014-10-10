@@ -28,7 +28,7 @@ class puppetlabs_yum (
   $enable_devel             = false,
 ) inherits puppetlabs_yum::params {
 
-  if $::pper_installed == 'false' or $::pper_installed == undef {
+  if $::is_pe == 'false' or $::is_pe == undef {
 
     if $::osfamily == 'RedHat' {
       include puppetlabs_yum::gpg_key

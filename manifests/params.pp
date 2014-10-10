@@ -3,14 +3,21 @@ class puppetlabs_yum::params (
   $urlbase = 'http://yum.puppetlabs.com',
 ) {
 
+  if $::operatingsystemmajrelease {
+    $os_maj_release = $::operatingsystemmajrelease
+  } else {
+    $os_versions    = split($::operatingsystemrelease, '[.]')
+    $os_maj_release = $os_versions[0]
+  }
+
   # There are some URL manipulations that have to happen based on exact OS type
   if $::osfamily == 'RedHat' {
     if $::operatingsystem == 'Fedora' {
       $ostype = 'Fedora'
-      $urlbit = "fedora/f${::operatingsystemmajrelease}"
+      $urlbit = "fedora/f${os_maj_release}"
     } else {
       $ostype = 'EL'
-      $urlbit = "el/${::operatingsystemmajrelease}"
+      $urlbit = "el/${os_maj_release}"
     }
   }
 
@@ -20,11 +27,11 @@ class puppetlabs_yum::params (
   $products_source_baseurl  = "${urlbase}/${urlbit}/products/SRPMS"
   $deps_source_baseurl      = "${urlbase}/${urlbit}/dependencies/SRPMS"
   $devel_source_baseurl     = "${urlbase}/${urlbit}/devel/SRPMS"
-  $products_descr           = "Puppet Labs Products ${ostype} ${::operatingsystemmajrelease} - \$basearch"
-  $deps_descr               = "Puppet Labs Dependencies ${ostype} ${::operatingsystemmajrelease} - \$basearch"
-  $devel_descr              = "Puppet Labs Devel ${ostype} ${::operatingsystemmajrelease} - \$basearch"
-  $products_source_descr    = "Puppet Labs Products ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
-  $deps_source_descr        = "Puppet Labs Dependencies ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
-  $devel_source_descr       = "Puppet Labs Devel ${ostype} ${::operatingsystemmajrelease} - \$basearch - Source"
+  $products_descr           = "Puppet Labs Products ${ostype} ${os_maj_release} - \$basearch"
+  $deps_descr               = "Puppet Labs Dependencies ${ostype} ${os_maj_release} - \$basearch"
+  $devel_descr              = "Puppet Labs Devel ${ostype} ${os_maj_release} - \$basearch"
+  $products_source_descr    = "Puppet Labs Products ${ostype} ${os_maj_release} - \$basearch - Source"
+  $deps_source_descr        = "Puppet Labs Dependencies ${ostype} ${os_maj_release} - \$basearch - Source"
+  $devel_source_descr       = "Puppet Labs Devel ${ostype} ${os_maj_release} - \$basearch - Source"
 
 }
